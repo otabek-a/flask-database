@@ -1,6 +1,7 @@
 from tinydb import TinyDB, Query
 
 
+
 class ProductsDB:
     def __init__(self, db_path):
         self.db = TinyDB(db_path)
@@ -9,40 +10,104 @@ class ProductsDB:
     
     def all_products(self):
         """Returns all products in the database"""
-        pass
+        return self.table.all()
     
     def get_product_id(self, id):
         """Returns all products by id"""
-        pass
+        data=self.table.all()
+        for i in data:
+            if i['id']==id:
+                return i
     
     def get_all_product_names(self):
         """Returns all product names"""
-        pass
+        res=[]
+        data=self.table.all()
+        for i in data:
+            res.append(i['name'])
+        return res
+
 
     def get_names(self, name: str):
         """Returns all products by name"""
-        pass
+        res=[]
+        data=self.table.all()
+        for i in data:
+            if i['name']==name:
+               return i
+        
 
     def get_all_catagories(self):
         """Returns all catagories name"""
-        pass
+        res=[]
+        data=self.table.all()
+        for i in data:
+            res.append(i["category"])
+        return res
+        
     
     def get_small_from_price(self, price):
         """Returns products if product's price small from price"""
-        pass
+        res=[]
+        data=self.table.all()
+        for i in data:
+            if i['price']==price:
+               return i
 
     def expensive_products(self):
         """Returns a top three expensive products"""
-        pass
+        res=[]
+        data=self.table.all()
+        for i in data:
+            res.append(i['price'])
+        a=sorted(res)[::-1][:3]
+        result=[]
+        i=0
+        while i < len(data):  
+          if data[i]['price'] in a: 
+            result.append(data[i]) 
+          i += 1  
+
+        return result 
     
-    def get_between_price(self, max_price, min_price):
+    def get_between_price(self):
         """Returns a products between max_price and min_price"""
-        pass
+        res=[]
+        data=self.table.all()
+        for i in data:
+            res.append(i['price'])
+        a=sorted(res)[1:-1]
+        result=[]
+        i=0
+        while i < len(data):  
+          if data[i]['price'] in a: 
+            result.append(data[i]) 
+          i += 1  
+
+        return result 
 
     def add_product(self, product):
         """Adds a product to the database"""
-        pass
+        data=self.table
+        data.insert(product)
+        return f'we inserted this product {product}'
 
     def delete_product(self, doc_id):
         """Deletes a product from the database"""
+        res=[]
+        for i in self.table.all():
+            if i['id']==doc_id:
+                res.append(i)
+        data = self.table
 
+    
+        product = data.search(Query().id == doc_id)
+
+        if product:
+          data.remove(Query().id == doc_id)
+
+          return f'we deleted that product {res}'
+        return f'cannot find this {doc_id} '
+
+son=ProductsDB('products_db.json')
+print(son.delete_product(3))
