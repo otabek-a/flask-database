@@ -70,26 +70,15 @@ class ProductsDB:
 
         return result 
     
-    def get_between_price(self):
+    def get_between_price(self,min_price,max_price):
         """Returns a products between max_price and min_price"""
-        res=[]
-        data=self.table.all()
-        for i in data:
-            res.append(i['price'])
-        a=sorted(res)[1:-1]
-        result=[]
-        i=0
-        while i < len(data):  
-          if data[i]['price'] in a: 
-            result.append(data[i]) 
-          i += 1  
-
-        return result 
+        return self.table.search((self.query.price >= min_price) & (self.query.price <= max_price))
 
     def add_product(self, product):
         """Adds a product to the database"""
         data=self.table
         data.insert(product)
+
         return f'we inserted this product {product}'
 
     def delete_product(self, doc_id):
@@ -110,4 +99,4 @@ class ProductsDB:
         return f'cannot find this {doc_id} '
 
 son=ProductsDB('products_db.json')
-print(son.delete_product(3))
+print(son.get_between_price(1,100))
