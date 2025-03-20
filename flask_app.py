@@ -10,7 +10,9 @@ app = Flask(__name__)
 def get_all_products():
     """Returns all products in the database"""
     db = ProductsDB('products_db.json')
-    return db.all_products()
+    if db:
+        return db.all_products()
+    return {'type':'eror'}
 
 # view all product by id
 # @app.route('/products/id/<id>', methods=['GET'])
